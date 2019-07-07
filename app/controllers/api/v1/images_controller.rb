@@ -3,6 +3,11 @@ module Api
     class ImagesController < ApplicationController
       before_action :authenticate_user!
 
+      def index
+        images = @current_user.images
+        render json: images, status: :ok
+      end
+
       def create
         image = @current_user.images.new(image_params)
 
