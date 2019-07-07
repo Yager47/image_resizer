@@ -54,4 +54,43 @@ RSpec.describe 'Images API', type: :request do
       end
     end
   end
+
+  describe 'POST /images/resize_old_image' do
+    let!(:image) { create(:image, user_id: current_user.id) }
+    let(:valid_attributes) { { id: image.id, width: 100, height: 100 } }
+
+    context 'when the request is valid' do
+      before { post '/images/resize_old_image', params: valid_attributes, headers: headers }
+
+      it 'returns status code 201' do
+        expect(response).to have_http_status(201)
+      end
+
+      it 'creates an image with proper attributes' do
+        expect(json['width']).to eq valid_attributes[:width]
+        expect(json['height']).to eq valid_attributes[:height]
+      end
+    end
+
+    context 'when image does not exist' do
+      before { post '/images/resize_old_image', params: { id: '11111', width: 100, height: 100 }, headers: headers }
+
+      it 'returns status code 404' do
+        expect(response).to have_http_status(404)
+      end
+
+      it 'returns validation error message' do
+        expect(json).to have_key 'error'
+        expect(json['error']).to eq "Image not found"
+      end
+    end
+
+    context 'when image request is invalid' do
+      before { post '/images/resize_old_image', params: { id: image.id, width: 100, height: 0 }, headers: headers }
+
+      it 'returns status code 404' do
+        expect(response).to have_http_status(422)
+      end
+    end
+  end
 end
