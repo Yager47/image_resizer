@@ -1,11 +1,15 @@
 require 'rails_helper'
 
 RSpec.describe 'Images API', type: :request do
+  let!(:current_user) { create(:user) }
+  let(:auth_token) { JsonWebToken.encode(access_token: current_user.access_token) }
+  let(:headers) { { 'Authorization' => auth_token } }
+
   describe 'POST /images' do
     let(:valid_attributes) { attributes_for(:image) }
 
     context 'when the request is valid' do
-      before { post '/images', params: valid_attributes }
+      before { post '/images', params: valid_attributes, headers: headers }
 
       it 'returns status code 201' do
         expect(response).to have_http_status(201)
@@ -18,7 +22,7 @@ RSpec.describe 'Images API', type: :request do
     end
 
     context 'when the request is invalid' do
-      before { post '/images', params: { width: 100 } }
+      before { post '/images', params: { width: 100 }, headers: headers }
 
       it 'returns status code 422' do
         expect(response).to have_http_status(422)
