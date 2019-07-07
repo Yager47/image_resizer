@@ -9,6 +9,8 @@ class Image
                             styles: ->(attachment) { attachment.instance.styles },
                             path: 'public/images/:id/:style.:extension'
 
+  belongs_to :user
+
   validates_presence_of :file, :width, :height
   validates_numericality_of :width, :height, greater_than: 0
   validates_attachment_content_type :file, content_type: %w[image/jpeg image/gif image/png]

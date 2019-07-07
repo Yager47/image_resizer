@@ -1,13 +1,10 @@
 module Api
   module V1
     class ImagesController < ApplicationController
-      def index
-        images = Image.all
-        render json: images, status: :ok
-      end
+      before_action :authenticate_user!
 
       def create
-        image = Image.new(image_params)
+        image = @current_user.images.new(image_params)
 
         if image.save
           render json: image, status: :created
