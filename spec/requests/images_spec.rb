@@ -5,6 +5,23 @@ RSpec.describe 'Images API', type: :request do
   let(:auth_token) { JsonWebToken.encode(access_token: current_user.access_token) }
   let(:headers) { { 'Authorization' => auth_token } }
 
+  describe 'GET /images' do
+    let(:another_user) { create(:user) }
+    let!(:images) { create_list(:image, 2, user_id: current_user.id) }
+    let!(:other_images) { create_list(:image, 2, user_id: another_user.id) }
+
+    before { get '/images', headers: headers }
+
+    it 'returns status code 200' do
+      expect(response).to have_http_status(200)
+    end
+
+    it 'returns user images' do
+      expect(json).not_to be_empty
+      expect(json.size).to eq 2
+    end
+  end
+
   describe 'POST /images' do
     let(:valid_attributes) { attributes_for(:image) }
 

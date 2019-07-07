@@ -7,7 +7,8 @@ class Image
 
   has_mongoid_attached_file :file,
                             styles: ->(attachment) { attachment.instance.styles },
-                            path: 'public/images/:id/:style.:extension'
+                            url: 'public/images/:id/:style.:extension',
+                            path: ':url'
 
   belongs_to :user
 
@@ -26,12 +27,7 @@ class Image
     { resize: "#{width}x#{height}!" }
   end
 
-  def to_json(options = {})
-    params = {
-      url: file.url(:resize),
-      width: width,
-      height: height
-    }
-    JSON.pretty_generate(params, options)
+  def as_json(options = {})
+    super(only: [:width, :height]).merge(url: file.url(:resize))
   end
 end
