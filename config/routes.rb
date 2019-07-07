@@ -1,3 +1,12 @@
 Rails.application.routes.draw do
-  # For details on the DSL available within this file, see http://guides.rubyonrails.org/routing.html
+  scope module: :api do
+    scope module: :v1, constraints: ApiVersion.new('v1', true) do
+      post 'subscribe', to: 'authentication#subscribe'
+      resources :images, only: [:index, :create] do
+        collection do
+          post :resize_old_image
+        end
+      end
+    end
+  end
 end

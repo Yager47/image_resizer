@@ -7,9 +7,7 @@
 !/log/.keep
 !/tmp/.keep
 
-/public/uploads
+/public/images
 
 .byebug_history
 .env
-
-
