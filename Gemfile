@@ -6,7 +6,7 @@ git_source(:github) do |repo_name|
 end
 
 gem 'rails', '~> 5.1.6', '>= 5.1.6.1'
-gem 'puma', '~> 3.7'
+gem 'puma', '~> 3.12'
 gem 'mongoid'
 gem 'mongoid-paperclip'
 gem 'mini_magick'
